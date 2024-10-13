@@ -9,18 +9,39 @@ import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Animated, {
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
 
-const screenWidth = Dimensions.get("window").width;
+interface SlackHeaderContentProps {
+  active: boolean;
+  setActive: (_: boolean) => void;
+}
 
+const screenWidth = Dimensions.get("window").width;
 const color = "#222429";
 
-const SlackHeaderContent = () => {
-  const width = useSharedValue(screenWidth - 100);
-  const left = useSharedValue(50);
-  const height = useSharedValue(45);
+const initialHeight = 45;
+const initialWidth = screenWidth - 100;
+const initialLeft = 50;
+const activeWidth = screenWidth - 10;
+const activeLeft = 5;
+const activeHeight = 400;
+
+const SlackHeaderContent = ({ active, setActive }: SlackHeaderContentProps) => {
+  const height = useDerivedValue(
+    () => (active ? activeHeight : initialHeight),
+    [active]
+  );
+  const left = useDerivedValue(
+    () => (active ? activeLeft : initialLeft),
+    [active]
+  );
+  const width = useDerivedValue(
+    () => (active ? activeWidth : initialWidth),
+    [active]
+  );
 
   const animatedStyles = useAnimatedStyle(() => ({
     width: withTiming(width.value),
@@ -29,9 +50,7 @@ const SlackHeaderContent = () => {
   }));
 
   const animate = () => {
-    width.value = screenWidth;
-    left.value = 0;
-    height.value = 400;
+    setActive(true);
   };
 
   return (
@@ -39,9 +58,11 @@ const SlackHeaderContent = () => {
       <View style={styles.shadow} />
       <TouchableWithoutFeedback onPress={animate}>
         <Animated.View style={[animatedStyles, styles.container]}>
-          <FontAwesome name="lock" size={20} color="white" />
-          <View>
-            <Text style={styles.channelname}>tech-point</Text>
+          <View style={styles.channeldetails}>
+            <FontAwesome name="lock" size={20} color="white" />
+            <View>
+              <Text style={styles.channelname}>tech-point</Text>
+            </View>
           </View>
         </Animated.View>
       </TouchableWithoutFeedback>
@@ -56,14 +77,18 @@ const styles = StyleSheet.create({
     height: 50,
     flex: 1,
   },
+  channeldetails: {
+    height: initialHeight,
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 15,
+  },
   container: {
     backgroundColor: color,
     flex: 1,
     borderRadius: 10,
     paddingHorizontal: 10,
-    alignItems: "center",
-    flexDirection: "row",
-    gap: 15,
+
     position: "absolute",
     top: 0,
     zIndex: 2,

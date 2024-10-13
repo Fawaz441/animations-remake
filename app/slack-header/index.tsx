@@ -1,24 +1,48 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
 import SlackHeaderContent from "../components/SlackHeaderContent";
+import Animated, {
+  useAnimatedStyle,
+  useDerivedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 const color = "#1c1d22";
 
 const SlackHeader = () => {
   const insets = useSafeAreaInsets();
+  const [channelHeaderActive, setChannelHeaderActive] = useState(false);
+
+  const backdropOpacity = useDerivedValue(
+    () => (channelHeaderActive ? 1 : 0),
+    [channelHeaderActive]
+  );
+  const backdropStyles = useAnimatedStyle(() => ({
+    opacity: withTiming(backdropOpacity.value),
+  }));
+
   return (
     <SafeAreaView style={styles.container} edges={[]}>
       <View style={[{ height: insets.top, backgroundColor: color }]} />
+      <TouchableWithoutFeedback
+        disabled={!channelHeaderActive}
+        onPress={() => setChannelHeaderActive(false)}
+      >
+        <Animated.View style={[styles.backdrop, backdropStyles]} />
+      </TouchableWithoutFeedback>
       <View style={styles.header}>
         <View style={styles.headeredge}>
           <FontAwesome6 name="angle-left" size={24} color="white" />
         </View>
-        <SlackHeaderContent />
+        <SlackHeaderContent
+          active={channelHeaderActive}
+          setActive={setChannelHeaderActive}
+        />
         <View style={styles.headeredge}>
           <FontAwesome6 name="headphones" size={24} color="white" />
         </View>
@@ -30,6 +54,12 @@ const SlackHeader = () => {
 export default SlackHeader;
 
 const styles = StyleSheet.create({
+  backdrop: {
+    ...StyleSheet.absoluteFillObject,
+    height: "100%",
+    width: "100%",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
   container: {
     flex: 1,
   },
