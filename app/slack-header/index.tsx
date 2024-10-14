@@ -1,10 +1,15 @@
-import { StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
+import {
+  StyleSheet,
+  TouchableWithoutFeedback,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
+import { FontAwesome6 } from "@expo/vector-icons";
 import SlackHeaderContent from "../components/SlackHeaderContent";
 import Animated, {
   useAnimatedStyle,
@@ -16,6 +21,7 @@ const color = "#1c1d22";
 
 const SlackHeader = () => {
   const insets = useSafeAreaInsets();
+  const { height, width } = useWindowDimensions();
   const [channelHeaderActive, setChannelHeaderActive] = useState(false);
 
   const backdropOpacity = useDerivedValue(
@@ -33,7 +39,13 @@ const SlackHeader = () => {
         disabled={!channelHeaderActive}
         onPress={() => setChannelHeaderActive(false)}
       >
-        <Animated.View style={[styles.backdrop, backdropStyles]} />
+        <Animated.View
+          style={[
+            styles.backdrop,
+            backdropStyles,
+            { width, height: height - insets.top, top: insets.top },
+          ]}
+        />
       </TouchableWithoutFeedback>
       <View style={styles.header}>
         <View style={styles.headeredge}>
@@ -55,9 +67,8 @@ export default SlackHeader;
 
 const styles = StyleSheet.create({
   backdrop: {
-    ...StyleSheet.absoluteFillObject,
-    height: "100%",
-    width: "100%",
+    position: "absolute",
+    left: 0,
     backgroundColor: "rgba(0,0,0,0.5)",
   },
   container: {

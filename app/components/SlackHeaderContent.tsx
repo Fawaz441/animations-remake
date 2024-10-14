@@ -6,13 +6,37 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import React from "react";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import {
+  FontAwesome,
+  FontAwesome5,
+  FontAwesome6,
+  AntDesign,
+  Feather,
+  Ionicons,
+  MaterialIcons,
+  Octicons,
+} from "@expo/vector-icons";
 import Animated, {
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+
+// exit icon <AntDesign name="close" size={24} color="black" />
+// person add icon <AntDesign name="adduser" size={24} color="black" />
+// star icon <FontAwesome name="star-o" size={24} color="black" />
+// search icon <Feather name="search" size={24} color="black" />
+// messages icon <Ionicons name="chatbubbles" size={24} color="black" />
+// add canvas icon <MaterialIcons name="post-add" size={24} color="black" />
+// pin icon <Ionicons name="chatbubbles" size={24} color="black" />
+// files icon <Octicons name="stack" size={24} color="black" />
+// bookmarks icon <Ionicons name="folder-outline" size={24} color="black" />
+// ellipsi icon <AntDesign name="ellipsis1" size={24} color="black" />
+// hours work sheet icon <Ionicons name="folder-outline" size={24} color="black" />
+// members icon <AntDesign name="contacts" size={24} color="black" />
+// settings and details icon <MaterialCommunityIcons name="cog-outline" size={24} color="black" />
+// angle right icon <AntDesign name="right" size={24} color="black" />
 
 interface SlackHeaderContentProps {
   active: boolean;
